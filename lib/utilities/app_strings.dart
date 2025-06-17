@@ -24,15 +24,14 @@ class AppString {
   static const String firstName = 'First Name';
   static const String lastName = 'Last Name';
   static const String name = 'Name';
-  static const String dateOfBirth = 'Date Of Birth';
-  static const String date = 'Date';
+  static const String fullName = 'Full Name';
+
 
   static const String enterUserName = 'Enter Username';
 
   static const String phoneNumber = 'Phone Number';
 
-  static const String phoneNumberHintText = '(+44) 20 12345629';
-  static const String confirmPassword = 'Confirm Password';
+   static const String confirmPassword = 'Confirm Password';
   static const String byCreatingAnAccountIAcceptTheTermsConditions =
       'By Creating The Account, I Accept the Terms & Conditions & Privacy Policy ';
   static const String alreadyHaveAnAccount = 'Already have an Account? ';

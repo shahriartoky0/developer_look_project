@@ -7,7 +7,6 @@ import '../../base/components/custom_text.dart';
 import '../../base/components/custom_text_field.dart';
 import '../../base/components/primary_button.dart';
 import '../../base/widgets/app_custom_textfield.dart';
-import 'forgot_password_page.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -96,25 +95,8 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                   ),
 
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      TextButton(
-                        onPressed: () {
-                          Get.to(const ForgotPasswordScreen());
-                        },
-                        child: Text(
-                          AppString.forgotPassword,
-                          style: Theme.of(
-                            context,
-                          ).textTheme.displayMedium?.copyWith(color: AppColors.black),
-                          textAlign: TextAlign.end,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
+
+                  const SizedBox(height: 48),
 
                   PrimaryButton(
                     buttonText: AppString.signIn,

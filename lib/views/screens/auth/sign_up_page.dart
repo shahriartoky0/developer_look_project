@@ -7,7 +7,6 @@ import '../../../utilities/app_colors.dart';
 import '../../../utilities/app_strings.dart';
 import '../../base/components/custom_text.dart';
 import '../../base/components/custom_text_field.dart';
-import '../../base/components/reusable_date_picker_field.dart';
 import '../../base/widgets/app_custom_textfield.dart';
 import '../../base/widgets/custom_appbar.dart';
 
@@ -20,12 +19,10 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _firstNameTEController = TextEditingController();
-  final TextEditingController _lastNameTEController = TextEditingController();
-  final TextEditingController _dateTEController = TextEditingController();
   final TextEditingController _emailTEController = TextEditingController();
-  final TextEditingController _phoneTEController = TextEditingController();
   final TextEditingController _passwordTEController = TextEditingController();
-  final TextEditingController _confirmPasswordTEController = TextEditingController();
+  final TextEditingController _confirmPasswordTEController =
+      TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool _isChecked = false;
@@ -59,19 +56,21 @@ class _SignUpPageState extends State<SignUpPage> {
                       Center(
                         child: Text(
                           'Please enter your details.',
-                          style: Theme.of(
-                            context,
-                          ).textTheme.displayMedium?.copyWith(color: AppColors.black),
+                          style: Theme.of(context).textTheme.displayMedium
+                              ?.copyWith(color: AppColors.black),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       const SizedBox(height: 32),
-                      Text(AppString.name, style: Theme.of(context).textTheme.headlineMedium),
+                      Text(
+                        AppString.fullName,
+                        style: Theme.of(context).textTheme.headlineMedium,
+                      ),
                       const SizedBox(height: 14),
                       AppCustomContainerField(
                         containerChild: MyTextFormFieldWithIcon(
-                          formHintText: AppString.firstName,
+                          formHintText: AppString.fullName,
 
                           controller: _firstNameTEController,
                           validator: (String? value) {
@@ -83,51 +82,19 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      AppCustomContainerField(
-                        containerChild: MyTextFormFieldWithIcon(
-                          formHintText: AppString.lastName,
 
-                          controller: _lastNameTEController,
-                          validator: (String? value) {
-                            if (value?.isEmpty ?? true) {
-                              return '${AppString.pleaseEnterYour} ${AppString.lastName} !!';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-
-                      /// =================== Date of birth =======>
                       Text(
-                        AppString.dateOfBirth,
+                        AppString.yourEmail,
                         style: Theme.of(context).textTheme.headlineMedium,
                       ),
-                      const SizedBox(height: 14),
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(24),
-                          border: Border.all(color: AppColors.primaryColor, width: 1.8),
-                        ),
-                        child: ReusableDatePickerField(
-                          color: const Color(0xFFEFF8FF),
-                          hintText: AppString.date,
-                          controller: _dateTEController,
-                          validator: (String? value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please select a date!';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Text(AppString.yourEmail, style: Theme.of(context).textTheme.headlineMedium),
                       const SizedBox(height: 14),
 
                       MyTextFormFieldWithIcon(
                         formHintText: AppString.enterYourEmail,
-                        prefixIcon: const Icon(Icons.mail_outline, color: AppColors.primaryColor),
+                        prefixIcon: const Icon(
+                          Icons.mail_outline,
+                          color: AppColors.primaryColor,
+                        ),
                         controller: _emailTEController,
                         validator: (String? value) {
                           if (value?.isEmpty ?? true) {
@@ -139,26 +106,9 @@ class _SignUpPageState extends State<SignUpPage> {
 
                       const SizedBox(height: 16),
                       Text(
-                        AppString.phoneNumber,
+                        AppString.password,
                         style: Theme.of(context).textTheme.headlineMedium,
                       ),
-                      const SizedBox(height: 14),
-                      AppCustomContainerField(
-                        containerChild: MyTextFormFieldWithIcon(
-                          formHintText: AppString.phoneNumber,
-                          keyBoardType: TextInputType.number,
-
-                          controller: _phoneTEController,
-                          validator: (String? value) {
-                            if (value?.isEmpty ?? true) {
-                              return '${AppString.pleaseEnterYour}${AppString.phoneNumber} !!';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Text(AppString.password, style: Theme.of(context).textTheme.headlineMedium),
                       const SizedBox(height: 14),
                       AppCustomContainerField(
                         containerChild: MyTextFormFieldWithIcon(
@@ -222,8 +172,11 @@ class _SignUpPageState extends State<SignUpPage> {
                                 });
                               },
                               child: Text(
-                                AppString.byCreatingAnAccountIAcceptTheTermsConditions,
-                                style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                                AppString
+                                    .byCreatingAnAccountIAcceptTheTermsConditions,
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.displayMedium?.copyWith(
                                   color: AppColors.black,
                                   fontSize: 12,
                                 ),
@@ -240,7 +193,9 @@ class _SignUpPageState extends State<SignUpPage> {
                             backgroundColor:
                                 _isChecked
                                     ? AppColors.primaryColor
-                                    : AppColors.primaryColor.withValues(alpha: .5),
+                                    : AppColors.primaryColor.withValues(
+                                      alpha: .5,
+                                    ),
                           ),
                           onPressed: () {
                             FocusScope.of(context).unfocus();
@@ -273,7 +228,9 @@ class _SignUpPageState extends State<SignUpPage> {
                               },
                               child: Text(
                                 AppString.signIn,
-                                style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.headlineMedium!.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: AppColors.primaryColor,
                                 ),
@@ -295,11 +252,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   void clearTextFields() {
     _firstNameTEController.clear();
-    _lastNameTEController.clear();
-    _dateTEController.clear();
     _emailTEController.clear();
-
-    _phoneTEController.clear();
 
     _passwordTEController.clear();
 
@@ -309,10 +262,7 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   void dispose() {
     _firstNameTEController.dispose();
-    _lastNameTEController.dispose();
-    _dateTEController.dispose();
     _emailTEController.dispose();
-    _phoneTEController.dispose();
     _passwordTEController.dispose();
     _confirmPasswordTEController.dispose();
     super.dispose();
