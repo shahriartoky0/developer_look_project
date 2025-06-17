@@ -224,7 +224,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             const Text(AppString.alreadyHaveAnAccount),
                             TextButton(
                               onPressed: () {
-                                Get.to(const SignInPage());
+                                Get.offAll(() => const SignInPage());
                               },
                               child: Text(
                                 AppString.signIn,
