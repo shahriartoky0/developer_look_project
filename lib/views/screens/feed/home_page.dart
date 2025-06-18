@@ -1,5 +1,6 @@
 import 'package:developper_look/utilities/app_colors.dart';
 import 'package:developper_look/views/base/components/custom_cached_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
@@ -18,6 +19,7 @@ class PostCard extends StatelessWidget {
   final String commentText;
 
   const PostCard({
+    super.key,
     required this.userName,
     required this.profileImageUrl,
     required this.date,
@@ -211,6 +213,88 @@ class HomePage extends StatelessWidget {
 
                 imageUrl:
                     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAe9NZZk7nUE_anJir2Scf7tsqMHRdEpCbJg&s',
+              ),
+              Row(
+                children: [
+                  Text('30 like'),
+                  CircleAvatar(radius: 1),
+                  Text('20 comment'),
+                ],
+              ),
+              SizedBox(height: 12),
+              Row(
+                children: [
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(CupertinoIcons.hand_thumbsup),
+                      ),
+                      Text('Like'),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(CupertinoIcons.share),
+                      ),
+                      Text('Share'),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 12),
+
+              /// ===================> Comment card
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: AppColors.secondaryColor,
+                ),
+                child: Column(
+                  children: [
+                    ListTile(
+                      leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(24),
+                        child: CustomCachedImage(
+                          height: 30,
+                          width: 30,
+                          imageUrl:
+                              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAe9NZZk7nUE_anJir2Scf7tsqMHRdEpCbJg&s',
+                        ),
+                      ),
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Darron Levesque',
+                            style: textTheme.displayLarge,
+                          ),
+                          Text(
+                            '5 Upvotes',
+                            style: textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                      subtitle: Text(
+                        '3 min ago',
+                        style: textTheme.labelSmall?.copyWith(fontSize: 11),
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      'Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis',
+                    ),
+                    SizedBox(height: 8),
+                    Row(children: [
+
+                    ],)
+                  ],
+                ),
               ),
             ],
           ),

@@ -4,6 +4,7 @@ class AppColors {
   AppColors._();
 
   static const Color primaryColor = Color(0xFF46ACFA);
+  static const Color secondaryColor = Color(0xFF2F4F8);
    static const Color blue = Color(0xFF123462);
   static const Color darkRed = Color(0xFF841414);
   static const Color orange = Color(0xFFFF8133);
