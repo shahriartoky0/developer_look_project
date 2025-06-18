@@ -1,6 +1,7 @@
 import 'package:developper_look/utilities/app_constants.dart';
 import 'package:developper_look/utilities/app_theme.dart';
 import 'package:developper_look/views/screens/auth/sign_in_page.dart';
+import 'package:developper_look/views/screens/feed/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -32,5 +33,7 @@ class MyApp extends StatelessWidget {
 
 class ControllerBinder extends Bindings {
   @override
-  void dependencies() {}
+  void dependencies() {
+    Get.put(CardController());
+  }
 }

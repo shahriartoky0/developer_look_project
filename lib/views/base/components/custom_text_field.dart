@@ -38,7 +38,7 @@ class _MyTextFormFieldWithIconState extends State<MyTextFormFieldWithIcon> {
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.primaryColor, width: 1.8),
+        border: Border.all(color: Colors.grey, width: 0.8),
       ),
       child: TextFormField(
 
@@ -59,9 +59,7 @@ class _MyTextFormFieldWithIconState extends State<MyTextFormFieldWithIcon> {
          suffixIcon: widget.suffixIcon ?? _buildDefaultSuffixIcon(),
          // border: InputBorder.none,
          contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-         fillColor: const Color(0xFFEFF8FF),
-         filled: true,
-       ),
+         ),
        validator: widget.validator,
               ),
     );
@@ -73,8 +71,7 @@ class _MyTextFormFieldWithIconState extends State<MyTextFormFieldWithIcon> {
     return IconButton(
       icon: Icon(
         _obscureText ? Icons.visibility_off : Icons.visibility,
-        color: AppColors.primaryColor,
-      ),
+       ),
       onPressed: () {
         setState(() {
           _obscureText = !_obscureText;

@@ -93,8 +93,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         formHintText: AppString.enterYourEmail,
                         prefixIcon: const Icon(
                           Icons.mail_outline,
-                          color: AppColors.primaryColor,
-                        ),
+                         ),
                         controller: _emailTEController,
                         validator: (String? value) {
                           if (value?.isEmpty ?? true) {
@@ -116,8 +115,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           formHintText: AppString.enterPassword,
                           prefixIcon: const Icon(
                             Icons.lock_outlined,
-                            color: AppColors.primaryColor,
-                          ),
+                           ),
                           controller: _passwordTEController,
                           validator: (String? value) {
                             if (value?.isEmpty ?? true) {
@@ -139,8 +137,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           formHintText: AppString.confirmPassword,
                           prefixIcon: const Icon(
                             Icons.lock_outlined,
-                            color: AppColors.primaryColor,
-                          ),
+                           ),
                           controller: _confirmPasswordTEController,
                           validator: (String? value) {
                             if (value?.isEmpty ?? true) {
@@ -162,7 +159,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             },
                             checkColor: AppColors.white,
                             focusColor: AppColors.white,
-                            activeColor: AppColors.primaryColor,
+                            activeColor: AppColors.black,
                           ),
                           Expanded(
                             child: GestureDetector(
@@ -192,8 +189,8 @@ class _SignUpPageState extends State<SignUpPage> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor:
                                 _isChecked
-                                    ? AppColors.primaryColor
-                                    : AppColors.primaryColor.withValues(
+                                    ? AppColors.black
+                                    : AppColors.black.withValues(
                                       alpha: .5,
                                     ),
                           ),

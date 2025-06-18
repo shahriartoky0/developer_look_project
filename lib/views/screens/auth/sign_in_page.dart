@@ -7,6 +7,7 @@ import '../../base/components/custom_text.dart';
 import '../../base/components/custom_text_field.dart';
 import '../../base/components/primary_button.dart';
 import '../../base/widgets/app_custom_textfield.dart';
+import '../feed/home_page.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -45,7 +46,9 @@ class _SignInPageState extends State<SignInPage> {
                   Center(
                     child: Text(
                       AppString.welcomeBackPleaseEnterYourDetails,
-                      style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                      style: Theme.of(
+                        context,
+                      ).textTheme.displayMedium?.copyWith(
                         color: AppColors.black.withValues(alpha: 0.7),
                       ),
                       maxLines: 1,
@@ -54,12 +57,15 @@ class _SignInPageState extends State<SignInPage> {
                   ),
 
                   const SizedBox(height: 32),
-                  Text(AppString.email, style: Theme.of(context).textTheme.headlineMedium),
+                  Text(
+                    AppString.email,
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
                   const SizedBox(height: 14),
                   AppCustomContainerField(
                     containerChild: MyTextFormFieldWithIcon(
                       formHintText: AppString.enterEmail,
-                      prefixIcon: const Icon(Icons.mail_outline, color: AppColors.primaryColor),
+                      prefixIcon: const Icon(Icons.mail_outline),
                       controller: _emailTEController,
                       validator: (String? value) {
                         if (value?.isEmpty ?? true) {
@@ -74,13 +80,16 @@ class _SignInPageState extends State<SignInPage> {
                   ),
 
                   const SizedBox(height: 16),
-                  Text(AppString.password, style: Theme.of(context).textTheme.headlineMedium),
+                  Text(
+                    AppString.password,
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
                   const SizedBox(height: 14),
                   AppCustomContainerField(
                     containerChild: MyTextFormFieldWithIcon(
                       isPassword: true,
                       formHintText: AppString.enterPassword,
-                      prefixIcon: const Icon(Icons.lock_outlined, color: AppColors.primaryColor),
+                      prefixIcon: const Icon(Icons.lock_outlined),
                       controller: _passwordTEController,
                       validator: (String? value) {
                         if (value?.isEmpty ?? true) {
@@ -95,7 +104,6 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                   ),
 
-
                   const SizedBox(height: 48),
 
                   PrimaryButton(
@@ -103,7 +111,8 @@ class _SignInPageState extends State<SignInPage> {
                     // Text that will appear on the button
                     onPressed: () {
                       FocusScope.of(context).unfocus();
-                      clearingTextField(); // Your text clearing function
+                      clearingTextField();
+                      Get.to(() => HomePage());
                     },
                   ),
 
@@ -120,9 +129,8 @@ class _SignInPageState extends State<SignInPage> {
                           },
                           child: Text(
                             AppString.signUp,
-                            style: Theme.of(
-                              context,
-                            ).textTheme.headlineMedium?.copyWith(color: AppColors.primaryColor),
+                            style: Theme.of(context).textTheme.headlineMedium
+                                ?.copyWith(color: AppColors.primaryColor),
                           ),
                         ),
                       ],
@@ -141,7 +149,9 @@ class _SignInPageState extends State<SignInPage> {
   String? isEmailValid(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'Please enter your email';
-    } else if (!RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$').hasMatch(value)) {
+    } else if (!RegExp(
+      r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$',
+    ).hasMatch(value)) {
       return 'Please enter a valid email address';
     }
     return null;
