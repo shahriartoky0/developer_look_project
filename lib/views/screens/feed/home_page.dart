@@ -11,6 +11,7 @@ import '../../base/widgets/comment_widget.dart';
 import '../../base/widgets/like_share_widget.dart';
 import '../../base/widgets/post_maker_details_widget.dart';
 import '../../base/widgets/scrollable_chips_widgets.dart';
+import 'create_post.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -93,7 +94,9 @@ class HomePage extends StatelessWidget {
                           width: Get.width * .45,
                           iconWidget: CustomSvgImage(assetName: AppIcons.experienceShareIcon),
                           buttonText: 'Share Your Experience  ',
-                          onPressed: () {},
+                          onPressed: () {
+                            Get.to(() => CreatePost());
+                          },
                           buttonTextStyle: Theme.of(context).textTheme.labelMedium?.copyWith(
                             overflow: TextOverflow.ellipsis,
                             fontSize: 12,
@@ -277,3 +280,116 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+/*
+Padding(
+padding: const EdgeInsets.all(16.0),
+child: Column(
+mainAxisSize: MainAxisSize.min,
+children: [
+const SizedBox(height: 15),
+GestureDetector(
+onTap: _pickImage,
+child: DottedBorder(
+borderType: BorderType.RRect,
+radius: const Radius.circular(10),
+dashPattern: [8, 2],
+color: AppColors.black.withValues(alpha: 0.4),
+child: Container(
+width: double.infinity,
+height: 200,
+decoration: BoxDecoration(
+color: Color.fromRGBO(56, 78, 183, 0.1),
+borderRadius: BorderRadius.circular(10),
+),
+child: _image == null
+? Column(
+mainAxisAlignment: MainAxisAlignment.center,
+children: [
+CustomSvgImage(
+assetName: AppIcons.uploadImageIcon,
+width: 48,
+height: 48,
+),
+const SizedBox(height: 8),
+Text(
+'Browse your image from the device gallery',
+style: Theme.of(context).textTheme.headlineMedium,
+),
+const SizedBox(height: 16),
+SizedBox(
+width: 150,
+child: OutlinedButton(
+style: OutlinedButton.styleFrom(
+backgroundColor: Colors.black,
+shape: RoundedRectangleBorder(
+borderRadius: BorderRadius.circular(8),
+side: const BorderSide(color: AppColors.black),
+),
+),
+onPressed: _pickImage,
+child: Text(
+AppString.browseFiles,
+style: Theme.of(context).textTheme.displayMedium!.copyWith(
+fontWeight: FontWeight.bold,
+color: AppColors.white,
+),
+),
+),
+),
+],
+)
+    : ClipRRect(
+borderRadius: BorderRadius.circular(10),
+child: Image.file(_image!, fit: BoxFit.cover),
+),
+),
+),
+),
+const SizedBox(height: 20),
+
+// Dropdown with Search functionality
+Obx(() {
+return DropdownButtonFormField<String>(
+isExpanded: true,
+decoration: InputDecoration(
+labelText: "Select Airport",
+border: OutlineInputBorder(
+borderRadius: BorderRadius.circular(8),
+),
+),
+value: null,
+onChanged: (selectedValue) {
+print("Selected: $selectedValue");
+},
+items: [
+DropdownMenuItem<String>(
+value: '',
+child: Text("Search..."),
+),
+...dropdownController.filteredData.map((item) {
+return DropdownMenuItem<String>(
+value: item['name'],
+child: Text(item['name']),
+);
+}).toList(),
+],
+onTap: () {
+FocusScope.of(context).unfocus(); // Dismiss the keyboard when dropdown is tapped
+},
+);
+}),
+
+// TextField to search/filter the dropdown options
+TextField(
+onChanged: (query) => dropdownController.filterData(query),
+decoration: InputDecoration(
+labelText: "Search",
+suffixIcon: IconButton(
+icon: Icon(Icons.clear),
+onPressed: () => dropdownController.clearSearch(),
+),
+),
+),
+],
+),
+),*/

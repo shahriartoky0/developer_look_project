@@ -69,7 +69,7 @@ class AppString {
   static const String uploadFileInstructions =
       'Please upload file in jpeg or png format and make sure the file size is under 25 MB.';
   static const String dropOrBrowse = 'Pick the image from gallery';
-  static const String browseFiles = 'Browse Files';
+  static const String browseFiles = 'Browse Image';
   static const String photoFormatText = 'Format: .jpeg, .png, .jpg  ';
   static const String profilePic = 'Profile Picture';
 

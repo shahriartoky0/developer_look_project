@@ -88,4 +88,5 @@ class AppIcons {
   static String homeSearchIcon = "$baseUrl/home_search_icon.svg";
   static String homeNotificationIcon = "$baseUrl/home_notification_icon.svg";
   static String homeMenuIcon = "$baseUrl/home_menu_icon.svg";
+  static String uploadImageIcon = "$baseUrl/upload_image_icon.svg";
 }
