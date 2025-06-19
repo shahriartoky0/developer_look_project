@@ -1,150 +1,16 @@
 import 'package:developper_look/utilities/app_colors.dart';
+import 'package:developper_look/utilities/app_icons.dart';
 import 'package:developper_look/views/base/components/custom_cached_image.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:developper_look/views/base/components/custom_svg_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
-
-class PostCard extends StatelessWidget {
-  final String userName;
-  final String profileImageUrl;
-  final String date;
-  final String airline;
-  final String flightDetails;
-  final String postText;
-  final String postImageUrl;
-  final int likes;
-  final int comments;
-  final String commentUserName;
-  final String commentText;
-
-  const PostCard({
-    super.key,
-    required this.userName,
-    required this.profileImageUrl,
-    required this.date,
-    required this.airline,
-    required this.flightDetails,
-    required this.postText,
-    required this.postImageUrl,
-    required this.likes,
-    required this.comments,
-    required this.commentUserName,
-    required this.commentText,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // User Info Section
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  backgroundImage: NetworkImage(profileImageUrl),
-                  radius: 24,
-                ),
-                const SizedBox(width: 8),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      userName,
-                      style: Theme.of(context).textTheme.displayLarge,
-                    ),
-                    Text(
-                      '$date • $airline • $flightDetails',
-                      style: Theme.of(context).textTheme.displaySmall,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-
-          // Post Text
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              postText,
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ),
-
-          // Post Image
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Image.network(postImageUrl),
-          ),
-
-          // Interaction Section (Likes, Comments)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Icon(Icons.thumb_up_alt_outlined, size: 20),
-                    const SizedBox(width: 4),
-                    Text(
-                      '$likes Likes',
-                      style: Theme.of(context).textTheme.displayMedium,
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Icon(Icons.comment_outlined, size: 20),
-                    const SizedBox(width: 4),
-                    Text(
-                      '$comments Comments',
-                      style: Theme.of(context).textTheme.displayMedium,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-
-          // Comment Section
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              children: [
-                const Icon(Icons.account_circle, size: 24),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        commentUserName,
-                        style: Theme.of(context).textTheme.headlineSmall
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        commentText,
-                        style: Theme.of(context).textTheme.displaySmall,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+import '../../../controller/post_card_controller.dart';
+import '../../base/components/primary_button.dart';
+import '../../base/widgets/comment_card.dart';
+import '../../base/widgets/comment_widget.dart';
+import '../../base/widgets/like_share_widget.dart';
+import '../../base/widgets/post_maker_details_widget.dart';
+import '../../base/widgets/scrollable_chips_widgets.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -152,149 +18,257 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
-    final CardController cardController = Get.find<CardController>();
+    // List of chips data
+    final List<String> chipLabels = <String>[
+      'LHR - DEL',
+      'NYC - LA',
+      'SFO - MIA',
+      'BOS - ORD',
+      'SEA - ATL',
+    ];
     return Scaffold(
+      backgroundColor: AppColors.secondaryColor,
       body: SafeArea(
-        child: Container(
+        child: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ListTile(
-                leading: ClipRRect(
-                  borderRadius: BorderRadius.circular(24),
-                  child: CustomCachedImage(
-                    imageUrl:
-                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAe9NZZk7nUE_anJir2Scf7tsqMHRdEpCbJg&s',
-                  ),
-                ),
-                title: Text('Dianne Russel', style: textTheme.displayLarge),
-                subtitle: Text('1 Day ago', style: textTheme.labelSmall),
-                trailing: Wrap(
-                  spacing: 10,
-                  children: [
-                    RatingBar(
-                      initialRating: 3,
-                      direction: Axis.horizontal,
-                      allowHalfRating: false,
-                      itemCount: 5,
-                      itemSize: 18,
-                      ratingWidget: RatingWidget(
-                        full: Icon(Icons.star, color: Colors.amber),
-                        empty: Icon(Icons.star_border),
-                        half: Icon(Icons.star_border),
-                      ),
-                      itemPadding: EdgeInsets.symmetric(horizontal: 0),
-                      onRatingUpdate: (double rating) {
-                        cardController.updatedRating.value = rating;
-                        print(rating);
-                      },
-                    ),
-                    Obx(
-                      () => Text(cardController.updatedRating.value.toString()),
-                    ),
-                  ],
-                ),
-              ),
-              Chip(
-                backgroundColor: Colors.grey.withValues(alpha: 0.4),
-                label: Text('LHR - DEL', style: textTheme.headlineMedium),
-              ),
-              SizedBox(height: 12),
-              Text(
-                'Stay tuned for a ​smoother, more convenient experience right at your fingertips ,  a ​smoother, more convenient  a ​smoother, more convenient other, more convenient experience right at your ',
-              ),
-              TextButton(
-                onPressed: () {},
-                child: Text('See more', style: textTheme.displayLarge),
-              ),
-              CustomCachedImage(
-                height: Get.height * 0.3,
-                width: double.infinity,
-
-                imageUrl:
-                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAe9NZZk7nUE_anJir2Scf7tsqMHRdEpCbJg&s',
-              ),
-              Row(
-                children: [
-                  Text('30 like'),
-                  CircleAvatar(radius: 1),
-                  Text('20 comment'),
-                ],
-              ),
-              SizedBox(height: 12),
-              Row(
-                children: [
-                  Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(CupertinoIcons.hand_thumbsup),
-                      ),
-                      Text('Like'),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(CupertinoIcons.share),
-                      ),
-                      Text('Share'),
-                    ],
-                  ),
-                ],
-              ),
-              SizedBox(height: 12),
-
-              /// ===================> Comment card
+              /// Appbar section ========== >
               Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: AppColors.secondaryColor,
-                ),
-                child: Column(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                decoration: const BoxDecoration(color: Colors.white),
+                child: Row(
+                  spacing: 12,
                   children: [
-                    ListTile(
-                      leading: ClipRRect(
+                    Text(
+                      'Airline Review',
+                      style: textTheme.displayLarge?.copyWith(color: Colors.black, fontSize: 18),
+                    ),
+                    const Spacer(),
+                    CustomSvgImage(assetName: AppIcons.homeNotificationIcon),
+                    Container(
+                      decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(24),
-                        child: CustomCachedImage(
+                        border: Border.all(color: Colors.black, width: 1.2),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(24),
+
+                        child: const CustomCachedImage(
                           height: 30,
                           width: 30,
                           imageUrl:
                               'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAe9NZZk7nUE_anJir2Scf7tsqMHRdEpCbJg&s',
                         ),
                       ),
-                      title: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Darron Levesque',
-                            style: textTheme.displayLarge,
-                          ),
-                          Text(
-                            '5 Upvotes',
-                            style: textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
-                      ),
-                      subtitle: Text(
-                        '3 min ago',
-                        style: textTheme.labelSmall?.copyWith(fontSize: 11),
-                      ),
                     ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis',
-                    ),
-                    SizedBox(height: 8),
-                    Row(children: [
-
-                    ],)
+                    CustomSvgImage(assetName: AppIcons.homeMenuIcon),
                   ],
                 ),
+              ),
+              const SizedBox(height: 16),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+
+                child: CustomCachedImage(
+                  width: Get.width * 0.95,
+                  height: 80,
+
+                  imageUrl:
+                      'https://www.boeing.com/content/theboeingcompany/us/en/commercial/_jcr_content/root/container_2091943792/hero_teaser.coreimg.jpeg/1748637512430/commercial-home-737.jpeg',
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              /// Button section ========== >
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Column(
+                  children: [
+                    Row(
+                      spacing: 12,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        PrimaryButton(
+                          radius: 12,
+                          width: Get.width * .45,
+                          iconWidget: CustomSvgImage(assetName: AppIcons.experienceShareIcon),
+                          buttonText: 'Share Your Experience  ',
+                          onPressed: () {},
+                          buttonTextStyle: Theme.of(context).textTheme.labelMedium?.copyWith(
+                            overflow: TextOverflow.ellipsis,
+                            fontSize: 12,
+                          ),
+                        ),
+                        PrimaryButton(
+                          radius: 12,
+                          width: Get.width * .45,
+                          iconWidget: CustomSvgImage(assetName: AppIcons.personQuestionIcon),
+                          buttonText: 'Ask A Question  ',
+                          onPressed: () {},
+                          buttonTextStyle: Theme.of(context).textTheme.labelMedium?.copyWith(
+                            overflow: TextOverflow.ellipsis,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    PrimaryButton(
+                      width: Get.width * .93,
+
+                      radius: 12,
+                      iconWidget: CustomSvgImage(
+                        assetName: AppIcons.homeSearchIcon,
+                        color: Colors.white,
+                      ),
+                      buttonText: 'Search  ',
+                      onPressed: () {},
+                      buttonTextStyle: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        overflow: TextOverflow.ellipsis,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
+              ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                // controller: _scrollController,
+                // Assign ScrollController here
+                itemCount: 5,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        ///  ========================> The details of the person who posted  ======>
+                        PostMakerDetails(
+                          textTheme: textTheme,
+                          imageUrl:
+                              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAe9NZZk7nUE_anJir2Scf7tsqMHRdEpCbJg&s',
+                          postMakerName: 'Dianne Russel',
+                          time: '1 Day ago',
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              /// The keyword chips =============>
+                              ScrollableChips(chipLabels: chipLabels),
+                              const SizedBox(height: 12),
+                              const Text(
+                                'Stay tuned for a ​smoother, more convenient experience right at your fingertips ,  a ​smoother, more convenient  a ​smoother, more convenient other, more convenient experience right at your ',
+                              ),
+                              TextButton(
+                                onPressed: () {},
+                                child: Text('See more', style: textTheme.displayLarge),
+                              ),
+
+                              /// ================================== Image showing =================== >
+                              CustomCachedImage(
+                                height: Get.height * 0.3,
+                                width: double.infinity,
+
+                                imageUrl:
+                                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAe9NZZk7nUE_anJir2Scf7tsqMHRdEpCbJg&s',
+                              ),
+                              const SizedBox(height: 8),
+
+                              ///===============  The like and share count  ================= >
+                              Row(
+                                spacing: 12,
+                                children: <Widget>[
+                                  const Text('30 like'),
+                                  Container(
+                                    height: 3,
+                                    width: 3,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  const Text('20 comment'),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+
+                              ///===============  The like and share feature Icon ================= >
+                              LikeShareWidget(
+                                onLikeTap: () {
+                                  /// TODO : Like logic ========== >
+                                },
+                                onShareTap: () {
+                                  /// TODO : Share logic ========== >
+                                },
+                              ),
+                              const SizedBox(height: 12),
+
+                              /// =================== Comment card ===================>
+                              // now showing only one comment ==== >
+                              ListView.separated(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                // controller: _scrollController,
+                                // Assign ScrollController here
+                                itemCount: 5,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return CommentCard(
+                                    textTheme: textTheme,
+                                    commenterName: 'Darron Levesque',
+                                    time: '3 min ago',
+                                    upvote: '4',
+                                    commentDescription:
+                                        "'Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis'",
+                                    upvoteTap: () {
+                                      /// TODO :  Make upvote logic ========== >
+                                    },
+                                    replyTap: () {
+                                      /// TODO : Make a reply logic ========== >
+                                    },
+                                    commenterImage:
+                                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAe9NZZk7nUE_anJir2Scf7tsqMHRdEpCbJg&s',
+                                  );
+                                },
+                                separatorBuilder: (BuildContext context, int index) {
+                                  return const SizedBox(height: 8);
+                                },
+                              ),
+
+                              TextButton(
+                                onPressed: () {
+                                  Get.find<CardController>().showAllComments.value =
+                                      !Get.find<CardController>().showAllComments.value;
+                                },
+                                child: Text('See more Comments', style: textTheme.displayLarge),
+                              ),
+
+                              /// ============== The Comment tile ==========>
+                              CommentWidget(
+                                sendIconTap: () {
+                                  /// TODO : comment logic
+                                },
+                                userImage:
+                                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAe9NZZk7nUE_anJir2Scf7tsqMHRdEpCbJg&s',
+                              ),
+                              const SizedBox(height: 12),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return const SizedBox(height: 16);
+                },
               ),
             ],
           ),
@@ -302,8 +276,4 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
-}
-
-class CardController extends GetxController {
-  final RxDouble updatedRating = 3.0.obs;
 }

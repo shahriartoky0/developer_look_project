@@ -36,7 +36,7 @@ class AppTheme {
     textTheme: const TextTheme(
       displayLarge: TextStyle(
         fontSize: 15,
-        color: AppColors.black,
+        color: Color.fromRGBO(85, 85, 85, 1),
         fontWeight: FontWeight.w800,
       ),
       displayMedium: TextStyle(
@@ -61,7 +61,7 @@ class AppTheme {
       ),
       labelMedium: TextStyle(
         color: AppColors.white,
-        fontSize: 16,
+        fontSize: 15,
         fontWeight: FontWeight.bold,
       ),
       labelSmall: TextStyle(

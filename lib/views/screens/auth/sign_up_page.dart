@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:developper_look/views/screens/auth/sign_in_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,10 +7,11 @@ import 'package:get/get.dart';
 
 import '../../../utilities/app_colors.dart';
 import '../../../utilities/app_strings.dart';
+import '../../base/components/custom_cached_image.dart';
 import '../../base/components/custom_text.dart';
 import '../../base/components/custom_text_field.dart';
 import '../../base/widgets/app_custom_textfield.dart';
-import '../../base/widgets/custom_appbar.dart';
+import '../../base/widgets/upload_photo_dialouge.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -21,16 +24,15 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _firstNameTEController = TextEditingController();
   final TextEditingController _emailTEController = TextEditingController();
   final TextEditingController _passwordTEController = TextEditingController();
-  final TextEditingController _confirmPasswordTEController =
-      TextEditingController();
+  final TextEditingController _confirmPasswordTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool _isChecked = false;
+  File? _image;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppbar(headingText: ''),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -56,17 +58,81 @@ class _SignUpPageState extends State<SignUpPage> {
                       Center(
                         child: Text(
                           'Please enter your details.',
-                          style: Theme.of(context).textTheme.displayMedium
-                              ?.copyWith(color: AppColors.black),
+                          style: Theme.of(
+                            context,
+                          ).textTheme.displayMedium?.copyWith(color: AppColors.black),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       const SizedBox(height: 32),
-                      Text(
-                        AppString.fullName,
-                        style: Theme.of(context).textTheme.headlineMedium,
+                      /// Profile Picture ============== >
+                      Text(AppString.profilePic, style: Theme.of(context).textTheme.headlineMedium),
+                      const SizedBox(height: 12),
+                      InkWell(
+                        onTap: () async {
+                          final selectedImage = await showUploadPhotoDialog(context);
+                          if (selectedImage != null) {
+                            setState(() {
+                              _image = selectedImage;
+                            });
+                          }
+                        },
+                        child: Center(
+                          child: SizedBox(
+                            height: 120,
+                            child: Stack(
+                              // alignment: Alignment.topRight,
+                              children: <Widget>[
+                                Container(
+                                  width: 110,
+                                  height: 110,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(24),
+                                    border: Border.all(
+                                      color: Colors.grey, // Border color
+                                      width: 1.5,
+                                      // Border width
+                                    ),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(22),
+                                    child:
+                                    _image != null
+                                        ? Image.file(_image!, fit: BoxFit.cover)
+                                        : const CustomCachedImage(imageUrl: ''),
+                                  ),
+                                ),
+                                // Edit icon inside a box, positioned at the bottom-right
+                                Positioned(
+                                  bottom: 0,
+                                  right: 0,
+                                  child: InkWell(
+                                    onTap: () async {
+                                      final selectedImage = await showUploadPhotoDialog(context);
+                                      if (selectedImage != null) {
+                                        setState(() {
+                                          _image = selectedImage;
+                                        });
+                                      }
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.all(2),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.black,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: const Icon(Icons.edit, color: Colors.white, size: 18),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
+                      const SizedBox(height: 16),
+                      Text(AppString.fullName, style: Theme.of(context).textTheme.headlineMedium),
                       const SizedBox(height: 14),
                       AppCustomContainerField(
                         containerChild: MyTextFormFieldWithIcon(
@@ -83,17 +149,12 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       const SizedBox(height: 16),
 
-                      Text(
-                        AppString.yourEmail,
-                        style: Theme.of(context).textTheme.headlineMedium,
-                      ),
+                      Text(AppString.yourEmail, style: Theme.of(context).textTheme.headlineMedium),
                       const SizedBox(height: 14),
 
                       MyTextFormFieldWithIcon(
                         formHintText: AppString.enterYourEmail,
-                        prefixIcon: const Icon(
-                          Icons.mail_outline,
-                         ),
+                        prefixIcon: const Icon(Icons.mail_outline),
                         controller: _emailTEController,
                         validator: (String? value) {
                           if (value?.isEmpty ?? true) {
@@ -104,18 +165,15 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
 
                       const SizedBox(height: 16),
-                      Text(
-                        AppString.password,
-                        style: Theme.of(context).textTheme.headlineMedium,
-                      ),
+
+
+                      Text(AppString.password, style: Theme.of(context).textTheme.headlineMedium),
                       const SizedBox(height: 14),
                       AppCustomContainerField(
                         containerChild: MyTextFormFieldWithIcon(
                           isPassword: true,
                           formHintText: AppString.enterPassword,
-                          prefixIcon: const Icon(
-                            Icons.lock_outlined,
-                           ),
+                          prefixIcon: const Icon(Icons.lock_outlined),
                           controller: _passwordTEController,
                           validator: (String? value) {
                             if (value?.isEmpty ?? true) {
@@ -135,9 +193,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         containerChild: MyTextFormFieldWithIcon(
                           isPassword: true,
                           formHintText: AppString.confirmPassword,
-                          prefixIcon: const Icon(
-                            Icons.lock_outlined,
-                           ),
+                          prefixIcon: const Icon(Icons.lock_outlined),
                           controller: _confirmPasswordTEController,
                           validator: (String? value) {
                             if (value?.isEmpty ?? true) {
@@ -169,11 +225,8 @@ class _SignUpPageState extends State<SignUpPage> {
                                 });
                               },
                               child: Text(
-                                AppString
-                                    .byCreatingAnAccountIAcceptTheTermsConditions,
-                                style: Theme.of(
-                                  context,
-                                ).textTheme.displayMedium?.copyWith(
+                                AppString.byCreatingAnAccountIAcceptTheTermsConditions,
+                                style: Theme.of(context).textTheme.displayMedium?.copyWith(
                                   color: AppColors.black,
                                   fontSize: 12,
                                 ),
@@ -190,9 +243,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             backgroundColor:
                                 _isChecked
                                     ? AppColors.black
-                                    : AppColors.black.withValues(
-                                      alpha: .5,
-                                    ),
+                                    : AppColors.black.withValues(alpha: .5),
                           ),
                           onPressed: () {
                             FocusScope.of(context).unfocus();
@@ -225,9 +276,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               },
                               child: Text(
                                 AppString.signIn,
-                                style: Theme.of(
-                                  context,
-                                ).textTheme.headlineMedium!.copyWith(
+                                style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: AppColors.primaryColor,
                                 ),

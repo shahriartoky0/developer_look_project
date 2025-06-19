@@ -7,6 +7,9 @@ class PrimaryButton extends StatelessWidget {
   final num width;
   final MainAxisAlignment mainAxisAlignment;
   final Widget iconWidget;
+  final double height;
+  final double radius;
+  final TextStyle? buttonTextStyle;
 
   const PrimaryButton({
     super.key,
@@ -15,6 +18,9 @@ class PrimaryButton extends StatelessWidget {
     this.width = double.infinity,
     this.mainAxisAlignment = MainAxisAlignment.center,
     this.iconWidget = const SizedBox(),
+    this.height = 50,
+    this.buttonTextStyle,
+    this.radius = 24,
   });
 
   @override
@@ -42,15 +48,15 @@ class PrimaryButton extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         width: width.toDouble(),
-        height: 50,
+        height: height,
         decoration: BoxDecoration(
           color: AppColors.black,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(radius),
         ),
         child: Row(
           mainAxisAlignment: mainAxisAlignment,
           children: [
-            Text(buttonText, style: Theme.of(context).textTheme.labelMedium),
+            Text(buttonText, style: buttonTextStyle ?? Theme.of(context).textTheme.labelMedium),
             iconWidget,
           ],
         ),

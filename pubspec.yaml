@@ -45,6 +45,10 @@ dependencies:
   supabase_flutter: ^2.9.1
   #for rating bar
   flutter_rating_bar: ^4.0.1
+  #dotted Border
+  dotted_border: ^2.1.0
+  #image picking
+  image_picker: ^1.0.7
 
 dev_dependencies:
   flutter_test:
