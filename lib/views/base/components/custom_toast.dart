@@ -1,108 +1,174 @@
 import 'package:flutter/material.dart';
 
-import '../../../utilities/app_colors.dart';
-  
+import '../../../main.dart';
 
 
-class CustomToast {
-  static final CustomToast _instance = CustomToast._internal();
+class ToastManager {
+  /// Add this in the main.dart ======> [final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();]
 
-  factory CustomToast() => _instance;
+  static OverlayEntry? _currentToast;
 
-  CustomToast._internal();
-
-  OverlayEntry? _overlayEntry;
-
-  void showToast({
-    required BuildContext context,
+  static void show({
     required String message,
-    double width = double.infinity, // Use double.infinity for full width
-    EdgeInsetsGeometry margin = const EdgeInsets.symmetric(horizontal: 50.0),
-    Duration duration = const Duration(seconds: 1),
-    bool isError = false,
-    Color? customBackgroundColor,
-    double fontSize = 15,
-    Widget? headingWidget,
-    ToastPosition position = ToastPosition.bottom,
+    Widget icon = const Icon(Icons.error_outline),
+    Color backgroundColor = const Color(0xFF222222),
+    Color iconColor = Colors.white,
+    Color textColor = Colors.white,
+    double borderRadius = 12.0,
+    EdgeInsets padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    Duration duration = const Duration(seconds: 3),
+    Duration animationDuration = const Duration(milliseconds: 300),
+    Curve animationCurve = Curves.easeInOut,
   }) {
-    _overlayEntry?.remove(); // Remove any existing toast
-    _overlayEntry = OverlayEntry(
-      builder: (context) {
-        double? top, bottom;
-        switch (position) {
-          case ToastPosition.top:
-            top = 50.0;
-            bottom = null;
-            break;
-          case ToastPosition.center:
-            top = MediaQuery.of(context).size.height / 2 - 50.0;
-            bottom = null;
-            break;
-          case ToastPosition.bottom:
-            top = null;
-            bottom = 50.0;
-            break;
-        }
+    final OverlayState? overlayState = navigatorKey.currentState?.overlay;
+    if (overlayState == null) {
+      return;
+    }
 
-        // Determine the background color
-        final backgroundColor = customBackgroundColor ??
-            (isError ? Colors.red : AppColors.primaryColor);
+    _currentToast?.remove();
 
-        return Positioned(
-          top: top,
-          bottom: bottom,
-          left: 0.0,
-          right: 0.0,
-          child: Center(
-            child: Container(
-              constraints: BoxConstraints(maxWidth: width),
-              // Constrain width
-              margin: margin,
-              padding:
-                EdgeInsets.symmetric(horizontal: 16, vertical: 12.0),
-              decoration: BoxDecoration(
-                color: backgroundColor,
-                borderRadius: BorderRadius.circular(30),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  if (headingWidget != null) ...[
-                    headingWidget,
-                    SizedBox(width: 8), // Add spacing between widget and text
-                  ],
-                  Flexible(
-                    child: Text(
-                      message,
-                      style: Theme.of(context)
-                          .textTheme
-                          .displayLarge!
-                          .copyWith(fontSize: fontSize),
-                      textAlign: TextAlign.center,
-                      // overflow: TextOverflow.ellipsis, // Handle overflow
-                    ),
-                  ),
-                ],
-              ),
+    _currentToast = OverlayEntry(
+      builder:
+          (BuildContext context) => Positioned(
+        bottom: 50,
+        left: 20,
+        right: 20,
+        child: SafeArea(
+          child: ToastAnimation(
+            duration: animationDuration,
+            curve: animationCurve,
+            child: CustomToast(
+              icon: icon,
+              message: message,
+              backgroundColor: backgroundColor,
+              iconColor: iconColor,
+              textColor: textColor,
+              borderRadius: borderRadius,
+              padding: padding,
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
 
-    final overlay = Overlay.of(context);
-    overlay.insert(_overlayEntry!);
+    overlayState.insert(_currentToast!);
 
-    Future.delayed(duration, () {
-      _overlayEntry?.remove();
-      _overlayEntry = null;
+    Future.delayed(duration + animationDuration, () {
+      _currentToast?.remove();
+      _currentToast = null;
     });
   }
 }
 
-enum ToastPosition {
-  top,
-  center,
-  bottom,
+class ToastAnimation extends StatefulWidget {
+  final Widget child;
+  final Duration duration;
+  final Curve curve;
+
+  const ToastAnimation({
+    super.key,
+    required this.child,
+    this.duration = const Duration(milliseconds: 300),
+    this.curve = Curves.easeInOut,
+  });
+
+  @override
+  State<ToastAnimation> createState() => _ToastAnimationState();
 }
+
+class _ToastAnimationState extends State<ToastAnimation> with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _fadeAnimation;
+  late final Animation<Offset> _slideAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(vsync: this, duration: widget.duration);
+
+    _fadeAnimation = CurvedAnimation(parent: _controller, curve: widget.curve);
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.2),
+      end: Offset.zero,
+    ).animate(_fadeAnimation);
+
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.reverse(); // Fade out when disposed
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: SlideTransition(position: _slideAnimation, child: widget.child),
+    );
+  }
+}
+
+class CustomToast extends StatelessWidget {
+  final Widget icon;
+  final String message;
+  final Color backgroundColor;
+  final Color iconColor;
+  final Color textColor;
+  final double borderRadius;
+  final EdgeInsets padding;
+
+  const CustomToast({
+    super.key,
+    required this.icon,
+    required this.message,
+    this.backgroundColor = const Color(0xFF222222),
+    this.iconColor = Colors.white,
+    this.textColor = Colors.white,
+    this.borderRadius = 12.0,
+    this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: Container(
+        padding: padding,
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(borderRadius),
+          boxShadow: const <BoxShadow>[
+            BoxShadow(color: Colors.black45, blurRadius: 8, offset: Offset(0, 3)),
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            icon,
+            const SizedBox(width: 8),
+            Flexible(
+              child: Text(
+                message,
+                style: TextStyle(color: textColor, fontWeight: FontWeight.w600, fontSize: 14),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/*ToastManager.show(
+message: "Sohan is the best Developper ",
+icon: Icons.wifi_off,
+// backgroundColor: Colors.red.shade700,
+backgroundColor: Colors.black,
+animationDuration: const Duration(milliseconds: 500),
+animationCurve: Curves.easeInSine,
+duration: const Duration(seconds: 1),
+);*/

@@ -5,6 +5,7 @@ import 'package:developper_look/views/base/components/custom_svg_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../controller/post_card_controller.dart';
+import '../../base/components/custom_toast.dart';
 import '../../base/components/primary_button.dart';
 import '../../base/widgets/comment_card.dart';
 import '../../base/widgets/comment_widget.dart';
@@ -93,7 +94,7 @@ class HomePage extends StatelessWidget {
                           radius: 12,
                           width: Get.width * .45,
                           iconWidget: CustomSvgImage(assetName: AppIcons.experienceShareIcon),
-                          buttonText: 'Share Your Experience  ',
+                          buttonText: 'Share Experience  ',
                           onPressed: () {
                             Get.to(() => CreatePost());
                           },
@@ -107,7 +108,17 @@ class HomePage extends StatelessWidget {
                           width: Get.width * .45,
                           iconWidget: CustomSvgImage(assetName: AppIcons.personQuestionIcon),
                           buttonText: 'Ask A Question  ',
-                          onPressed: () {},
+                          onPressed: () {
+                            ToastManager.show(
+                              message: "Feature have not implemented yet",
+                              icon: const Icon(Icons.clear, color: AppColors.white),
+                              backgroundColor: AppColors.red,
+                              textColor: Colors.white,
+                              animationDuration: const Duration(milliseconds: 500),
+                              animationCurve: Curves.easeInSine,
+                              duration: const Duration(seconds: 2),
+                            );
+                          },
                           buttonTextStyle: Theme.of(context).textTheme.labelMedium?.copyWith(
                             overflow: TextOverflow.ellipsis,
                             fontSize: 12,
@@ -125,7 +136,17 @@ class HomePage extends StatelessWidget {
                         color: Colors.white,
                       ),
                       buttonText: 'Search  ',
-                      onPressed: () {},
+                      onPressed: () {
+                        ToastManager.show(
+                          message: "Feature have not implemented yet",
+                          icon: const Icon(Icons.clear, color: AppColors.white),
+                          backgroundColor: AppColors.red,
+                          textColor: Colors.white,
+                          animationDuration: const Duration(milliseconds: 500),
+                          animationCurve: Curves.easeInSine,
+                          duration: const Duration(seconds: 2),
+                        );
+                      },
                       buttonTextStyle: Theme.of(context).textTheme.labelMedium?.copyWith(
                         overflow: TextOverflow.ellipsis,
                         fontSize: 14,

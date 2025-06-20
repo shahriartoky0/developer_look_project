@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      navigatorKey: navigatorKey,
       home: SignInPage(),
       theme: AppTheme.defaultThemeData,
       initialBinding: ControllerBinder(),
@@ -39,3 +40,5 @@ class ControllerBinder extends Bindings {
     Get.put(CardController());
   }
 }
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
