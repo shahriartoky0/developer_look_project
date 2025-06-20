@@ -28,13 +28,11 @@ class CustomDropdown<T> extends StatefulWidget {
 
   @override
   _CustomDropdownState<T> createState() => _CustomDropdownState<T>();
-
 }
-
 class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
-
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
+  T? _selectedItem; // Store the selected item
 
   @override
   void initState() {
@@ -59,7 +57,6 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
     final filteredItems = widget.items.where((item) {
       if (item == null) return false;
 
-      // Check if T is AirportData for multi-field filtering
       if (T == AirportDetails) {
         final airport = item as AirportDetails;
         return airport.name.toString().toLowerCase().contains(pattern.toLowerCase()) ||
@@ -67,12 +64,10 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
             airport.code.toString().toLowerCase().contains(pattern.toLowerCase());
       }
 
-      // Fallback to displayString for other types
       final itemString = widget.displayString(item);
       return itemString.toLowerCase().contains(pattern.toLowerCase());
     }).toList();
 
-    print('Suggestions for pattern "$pattern": $filteredItems');
     return filteredItems;
   }
 
@@ -89,9 +84,10 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
 
     final overlayBottom = position.dy + renderBox.size.height + overlayHeight;
     if (overlayBottom > screenHeight - keyboardHeight) {
-      final scrollOffset = widget.scrollController!.offset +
-          (overlayBottom - (screenHeight - keyboardHeight)) +
-          16.0;
+      final scrollOffset =
+          widget.scrollController!.offset +
+              (overlayBottom - (screenHeight - keyboardHeight)) +
+              16.0;
       widget.scrollController!.animateTo(
         scrollOffset,
         duration: const Duration(milliseconds: 300),
@@ -124,8 +120,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
             borderSide: BorderSide(color: Colors.grey.withValues(alpha: 0.7)),
           ),
           hintText: widget.labelText,
-          hintStyle: const TextStyle(
-              fontWeight: FontWeight.w500, fontSize: 13, color: Colors.grey),
+          hintStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13, color: Colors.grey),
           suffixIcon: const Icon(Icons.keyboard_arrow_down_sharp),
           contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
         ),
@@ -139,8 +134,11 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
       },
       onSuggestionSelected: (suggestion) {
         if (suggestion != null) {
+          setState(() {
+            _selectedItem = suggestion; // Update selected item
+            _controller.text = widget.displayString(suggestion);
+          });
           widget.onItemSelected(suggestion);
-          _controller.text = widget.displayString(suggestion);
           _focusNode.unfocus();
           _scrollToMakeOverlayVisible(context);
         }
@@ -151,18 +149,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
         child: Text('No items found', style: TextStyle(color: Colors.grey)),
       ),
       validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please select an item';
-        }
-        final matchingItem = widget.items.firstWhere(
-              (item) {
-            if (item == null) return false;
-            return widget.displayString(item).toLowerCase() == value.toString().toLowerCase();
-          },
-          orElse: () => null as T,
-        );
-        if (matchingItem == null) {
-          return 'Please select a valid item from the list';
+        if (_selectedItem == null || value == null || value.isEmpty) {
+          return 'Please select a valid ${widget.labelText}';
         }
         return null;
       },

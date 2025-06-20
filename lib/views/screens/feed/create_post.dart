@@ -27,10 +27,10 @@ class CreatePost extends StatefulWidget {
 }
 
 class _CreatePostState extends State<CreatePost> {
-  final List<File> _images = [];
+  final List<File> _images = <File>[];
   final ImagePicker _picker = ImagePicker();
   final ScrollController _scrollController = ScrollController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   Future<void> _pickImages() async {
     PermissionStatus status;
@@ -46,14 +46,14 @@ class _CreatePostState extends State<CreatePost> {
         setState(() {
           if (_images.length + pickedFiles.length <= 10) {
             _images.addAll(
-              pickedFiles.map((file) {
+              pickedFiles.map((XFile file) {
                 print('Selected image path: ${file.path}');
                 return File(file.path);
               }),
             );
           } else {
             _images.addAll(
-              pickedFiles.take(10 - _images.length).map((file) {
+              pickedFiles.take(10 - _images.length).map((XFile file) {
                 print('Selected image path: ${file.path}');
                 return File(file.path);
               }),
@@ -90,7 +90,7 @@ class _CreatePostState extends State<CreatePost> {
             right: 8,
           ),
           child: Form(
-            key: _formKey,
+            key: formKey,
             child: Column(
               children: <Widget>[
                 Row(
@@ -155,15 +155,19 @@ class _CreatePostState extends State<CreatePost> {
                                     itemCount: _images.length,
                                     shrinkWrap: true,
                                     physics: const NeverScrollableScrollPhysics(),
-                                    itemBuilder: (context, index) {
+                                    itemBuilder: (BuildContext context, int index) {
                                       return Stack(
-                                        children: [
+                                        children: <Widget>[
                                           ClipRRect(
                                             borderRadius: BorderRadius.circular(10),
                                             child: Image.file(
                                               _images[index],
                                               fit: BoxFit.cover,
-                                              errorBuilder: (context, error, stackTrace) {
+                                              errorBuilder: (
+                                                BuildContext context,
+                                                Object error,
+                                                StackTrace? stackTrace,
+                                              ) {
                                                 print('Error loading image: $error');
                                                 return const Icon(Icons.error, color: Colors.red);
                                               },
@@ -192,9 +196,8 @@ class _CreatePostState extends State<CreatePost> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    Obx(
-                      () => CustomDropdown<AirportDetails>(
-                        items: Get.find<CardController>().airports.value,
+                     CustomDropdown<AirportDetails>(
+                        items: Get.find<CardController>().airports,
                         labelText: 'Departure Airport',
                         itemBuilder: (AirportDetails item) {
                           print('Building item: $item');
@@ -212,26 +215,26 @@ class _CreatePostState extends State<CreatePost> {
                         scrollController: _scrollController,
                         shouldScroll: false,
                       ),
-                    ),
+
                     const SizedBox(height: 12),
                     CustomDropdown<AirportDetails>(
-                        items: Get.find<CardController>().airports,
-                        labelText: 'Arrival Airport',
-                        itemBuilder: (AirportDetails airport) {
-                          // print('Building item: $airport');
-                          return ListTile(
-                            title: Text(airport.name ?? ''),
-                            subtitle: Text(airport.country ?? ''),
-                            trailing: Text(airport.code ?? ''),
-                          );
-                        },
-                        onItemSelected: (AirportDetails selectedItem) {
-                          print('Selected Item: ${selectedItem.name} (${selectedItem.code})');
-                        },
-                        scrollController: _scrollController,
-                        shouldScroll: false,
-                        displayString: (AirportDetails item) => item.name ?? '',
-                      ),
+                      items: Get.find<CardController>().airports,
+                      labelText: 'Arrival Airport',
+                      itemBuilder: (AirportDetails airport) {
+                        // print('Building item: $airport');
+                        return ListTile(
+                          title: Text(airport.name ?? ''),
+                          subtitle: Text(airport.country ?? ''),
+                          trailing: Text(airport.code ?? ''),
+                        );
+                      },
+                      onItemSelected: (AirportDetails selectedItem) {
+                        print('Selected Item: ${selectedItem.name} (${selectedItem.code})');
+                      },
+                      scrollController: _scrollController,
+                      shouldScroll: false,
+                      displayString: (AirportDetails item) => item.name ?? '',
+                    ),
 
                     const SizedBox(height: 12),
                     CustomDropdown<String>(
@@ -300,7 +303,7 @@ class _CreatePostState extends State<CreatePost> {
                     const SizedBox(height: 8),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
+                      children: <Widget>[
                         Expanded(
                           child: TextFormField(
                             controller: _dateTEController,
@@ -355,7 +358,7 @@ class _CreatePostState extends State<CreatePost> {
                         ),
                         const SizedBox(width: 12),
                         Row(
-                          children: [
+                          children: <Widget>[
                             const Text('Rating '),
                             RatingBar(
                               initialRating: 3,
@@ -381,7 +384,7 @@ class _CreatePostState extends State<CreatePost> {
                     PrimaryButton(
                       buttonText: "Post",
                       onPressed: () {
-                        if (_formKey.currentState!.validate()) {
+                        if (formKey.currentState!.validate()) {
                           Get.back();
                           ToastManager.show(
                             message: "Post Shared",
